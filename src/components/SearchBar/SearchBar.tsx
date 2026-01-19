@@ -1,58 +1,49 @@
-import { useRef } from 'react';
 import css from './SearchBar.module.css';
-import toast from 'react-hot-toast';
 
 interface SearchBarProps {
-    onSubmit: (query: string) => void;
+  onSearch: (query: string) => void;
 }
 
-const SearchBar = ({ onSubmit }: SearchBarProps) => {
-    const formRef = useRef<HTMLFormElement>(null);
+const SearchBar = ({ onSearch }: SearchBarProps) => {
+  const action = (formData: FormData) => {
+    const query = formData.get('query')?.toString().trim();
 
-    const handleAction = (formData: FormData) => {
-        const query = formData.get('query') as string;
-        const trimmedQuery = query?.trim();
+    if (!query) {
+      return;
+    }
 
-        if (!trimmedQuery) {
-            toast.error('Please enter a search query');
-            return;
-        }
+    onSearch(query);
+  };
 
-        onSubmit(trimmedQuery);
-        formRef.current?.reset();
-    };
+  return (
+    <header className={css.header}>
+      <div className={css.container}>
+        <a
+          className={css.link}
+          href="https://www.themoviedb.org/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Powered by TMDB
+        </a>
 
-    return (
-        <header className={css.header}>
-            <div className={css.container}>
-                <a
-                    className={css.link}
-                    href="https://www.themoviedb.org/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    Powered by TMDB
-                </a>
-                <form 
-                    className={css.form} 
-                    action={handleAction} 
-                    ref={formRef}
-                >
-                    <input
-                        className={css.input}
-                        type="text"
-                        name="query"
-                        autoComplete="off"
-                        placeholder="Search movies..."
-                        autoFocus
-                    />
-                    <button className={css.button} type="submit">
-                        Search
-                    </button>
-                </form>
-            </div>
-        </header>
-    );
+        <form className={css.form} action={action}>
+          <input
+            className={css.input}
+            type="text"
+            name="query"
+            autoComplete="off"
+            placeholder="Search movies..."
+            autoFocus
+          />
+
+          <button className={css.button} type="submit">
+            Search
+          </button>
+        </form>
+      </div>
+    </header>
+  );
 };
 
 export default SearchBar;
