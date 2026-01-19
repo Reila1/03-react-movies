@@ -8,9 +8,8 @@ interface SearchBarProps {
 
 const SearchBar = ({ onSubmit }: SearchBarProps) => {
     const formRef = useRef<HTMLFormElement>(null);
-    const handleAction = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        const formData = new FormData(e.currentTarget);
+
+    const handleAction = (formData: FormData) => {
         const query = formData.get('query') as string;
         const trimmedQuery = query?.trim();
 
@@ -36,7 +35,7 @@ const SearchBar = ({ onSubmit }: SearchBarProps) => {
                 </a>
                 <form 
                     className={css.form} 
-                    onSubmit={handleAction} 
+                    action={handleAction} 
                     ref={formRef}
                 >
                     <input
